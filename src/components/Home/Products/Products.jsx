@@ -109,8 +109,16 @@ const Products = () => {
     <div className="container mx-auto">
       <div className="grid grid-cols-4">
         {/* Left side bar*/}
-              <div className="p-5 col-span-1 border ">
-                  
+        <div className="p-5 col-span-1 border ">
+          {/* Search */}
+          <div className="flex items-center gap-5">
+            <input
+              type="text"
+              placeholder="Search"
+              className="input input-bordered input-warning w-full max-w-xs"
+                      />
+                      <button className="btn bg-orange-500 hover:bg-orange-400 text-white">Search</button>
+          </div>
           {/* Category */}
           <div className="border-b-2 p-5">
             <h3 className="mb-5 flex items-center gap-3 font-semibold text-lg cursor-pointer">
@@ -130,8 +138,8 @@ const Products = () => {
                 <Link>Unisex Clothing</Link>
               </li>
             </ul>
-                  </div>
-                  
+          </div>
+
           {/* Size */}
           <div className="border-b-2 p-5">
             <h3 className="text-xl font-bold mb-5">Size</h3>
@@ -175,8 +183,8 @@ const Products = () => {
               />
               <p className="text-lg font-semibold hover:text-orange-500">XXL</p>
             </div>
-                  </div>
-                  
+          </div>
+
           {/* Price */}
           <div className="border-b-2 p-5">
             <h3 className="text-xl font-bold mb-5">Price</h3>
@@ -196,10 +204,9 @@ const Products = () => {
                 <IoIosArrowDroprightCircle />
               </button>
             </div>
-                  </div>
-
-              </div>
-              {/* Right side bar */}
+          </div>
+        </div>
+        {/* Right side bar */}
         <div className="col-span-3">
           <h2 className="text-4xl font-bold p-5">All Products</h2>
           <div className=" p-5 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-5">

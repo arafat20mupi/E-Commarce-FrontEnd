@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 const ProductCard = ({ product }) => {
     const { name, description, price, image, category, size, rating, stock } = product;
   return (
-   <Link to='/product-details'>
+   <Link to={`/productDetails/${product.id}`}>
     <div className="p-5 border rounded-2xl hover:shadow-md duration-200 bg-gary-50">
       <span className='flex justify-end mb-2 text-gray-200 hover:text-orange-500 duration-200'>
         <FaHeart />
