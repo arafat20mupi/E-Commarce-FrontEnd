@@ -18,7 +18,7 @@ const Navbar = () => {
           </li>
           <li>
             {" "}
-            <Link className="cursor-pointer hover:underline">Products</Link>
+            <Link to='/products' className="cursor-pointer hover:underline">Products</Link>
           </li>
           <li>
             {" "}
