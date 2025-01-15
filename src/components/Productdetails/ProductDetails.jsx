@@ -1,184 +1,155 @@
-import { FaAngleDown } from "react-icons/fa";
-import ReviewForm from "./ReviewForm";
-
+import { useState } from "react";
+import Reviews from "./Reviews";
 
 const ProductDetails = () => {
-    const {
-        name,
-        price,
-        discount,
-        description,
-        images,
-        stock,
-        rating,
-        reviews,
-        brand,
-        productType,
-        sizes,
-    } = product;
-
-
-    const discountedPrice = discount
-        ? (price - (price * discount.value) / 100).toFixed(2)
-        : price;
+    const [selectedImage, setSelectedImage] = useState(0);
+    const [selectedSize, setSelectedSize] = useState(null);
+    const products = {
+        product_name: "ONE LIFE GRAPHIC T-SHIRT",
+        product_rating: "4.5/5",
+        product_price: "$260",
+        product_original_price: "$300",
+        product_discount: "-40%",
+        product_description:
+            "This graphic t-shirt which is perfect for any occasion. Crafted from a soft and breathable fabric, it offers superior comfort and style.",
+        product_colors: ["Green", "Dark Green", "Dark Blue"],
+        product_sizes: ["Small", "Medium", "Large", "X-Large"],
+        product_images: [
+            "https://i.ibb.co.com/cCq51pN/533545a2b1e10e90b8059bc1bc97eab5.png",
+            " https://i.ibb.co.com/BLt15jh/b417beff6f8fa6310534f3755fd23c5a.png",
+            " https://i.ibb.co.com/hHtC44h/9d8d7ff6e33f95a574450e07218fc909.png",
+        ],
+    };
 
     return (
-        <div className="mt-10 bg-white shadow-lg rounded-lg">
-            <div className="flex justify-around">
-                {/* Product Images */}
-                <div className="flex gap-4">
-                    {images.map((img, index) => (
-                        <img
-                            key={index}
-                            src={img}
-                            alt={name}
-                            className="w-[500] h-[500] object-cover rounded-lg border"
-                        />
-                    ))}
+        <div className="max-w-6xl mx-auto">
+            {/* Product Container */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Images Section */}
+                <div className="flex flex-col items-center justify-center">
+                    <div className="flex lg:flex-row-reverse flex-col">
+
+                        <div>
+                            <img
+                                src={products.product_images[selectedImage]} // Display selected image
+                                alt={products.product_name}
+                                className="w-80 object-cover m-2 h-[420px] rounded-lg border shadow-sm"
+                            />
+                        </div>
+                        <div>
+                            <div className="flex lg:flex-col">
+                                {products.product_images.map((image, index) => (
+                                    <img
+                                        key={index}
+                                        src={image}
+                                        alt={`Thumbnail ${index + 1}`}
+                                        className={`lg:w-36 w-24 object-cover m-2 h-[136px] rounded-lg border shadow-sm cursor-pointer ${index === selectedImage ? "border-blue-500" : "border-gray-200"
+                                            }`}
+                                        onClick={() => setSelectedImage(index)} // Update selected image
+                                    />
+                                ))}
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
 
-                {/* Product Info */}
-                <div className="mt-6">
-                    <h1 className="text-3xl font-bold">{name}</h1>
-                    <p className="text-gray-600 mt-2">{description}</p>
+                {/* Product Details Section */}
+                <div className="space-y-4">
+                    {/* Product Name and Rating */}
+                    <h1 className="text-2xl font-bold">{products.product_name}</h1>
+                    <div className="flex items-center space-x-2">
+                        <div className="rating rating-sm">
+                            {Array(5)
+                                .fill(0)
+                                .map((_, index) => (
+                                    <input
+                                        key={index}
+                                        type="radio"
+                                        name="rating"
+                                        className={`mask mask-star-2 ${index < 4 ? "bg-yellow-500" : "bg-gray-300"
+                                            }`}
+                                        defaultChecked={index === 3}
+                                    />
+                                ))}
+                        </div>
+                        <p className="text-sm text-gray-500">{products.product_rating}</p>
+                    </div>
 
-                    {/* Price and Discount */}
-                    <div className="mt-4">
-                        <p className="text-lg font-semibold text-green-600">
-                            ${discountedPrice}
+                    {/* Pricing */}
+                    <div className="flex items-center space-x-4">
+                        <p className="text-2xl font-bold text-red-500">
+                            {products.product_price}
                         </p>
-                        {discount && (
-                            <p className=" text-gray-500 line-through">
-                                ${price}
+                        <p className="text-gray-500 line-through">
+                            {products.product_original_price}
+                        </p>
+                        <span className="text-red-500 text-sm font-semibold">
+                            {products.product_discount}
+                        </span>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-gray-600">{products.product_description}</p>
+
+                    {/* Colors */}
+                    <div>
+                        <h4 className="text-sm font-semibold mb-2">Select Colors</h4>
+                        <div className="flex space-x-4">
+                            {products.product_colors.map((color, index) => (
+                                <button
+                                    key={index}
+                                    className={`w-8 h-8 rounded-full border border-gray-200 ${color === "Green"
+                                        ? "bg-green-700"
+                                        : color === "Dark Green"
+                                            ? "bg-teal-900"
+                                            : "bg-gray-900"
+                                        }`}
+                                    title={color}
+                                ></button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Sizes */}
+                    <div>
+                        <h4 className="text-sm font-semibold mb-2">Choose Size</h4>
+                        <div className="flex space-x-4">
+                            {products.product_sizes.map((size, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => setSelectedSize(size)}
+                                    className={`btn btn-sm ${selectedSize === size ? "btn-primary" : "btn-outline"}`}
+                                >
+                                    {size}
+                                </button>
+                            ))}
+                        </div>
+                        {selectedSize && (
+                            <p className="text-sm text-gray-600 mt-2">
+                                Selected Size: <span className="font-semibold">{selectedSize}</span>
                             </p>
                         )}
                     </div>
 
-                    {/* Stock Info */}
-                    <p
-                        className={`mt-2 ${stock > 0 ? 'text-green-500' : 'text-red-500'
-                            }`}
-                    >
-                        {stock > 0 ? `In Stock (${stock} available)` : 'Out of Stock'}
-                    </p>
-
-                    {/* Rating */}
-                    <div className="mt-2">
-                        <p className="text-sm text-yellow-500">
-                            Rating: {rating} / 5
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <p>Product Type : {productType}</p>
-                        <p>Brand : {brand}</p>
-                        <div className="flex gap-5">
-                            <p className="mt-2">Sizes: </p>
-                            <div className="flex gap-4 mt-2">
-                                {sizes.map((size, index) => (
-                                    <span key={index} className="px-3 py-1 border rounded-md bg-gray-200">
-                                        {size}
-                                    </span>
-                                ))}
-                            </div>
+                    {/* Quantity and Add to Cart */}
+                    <div className="flex items-center space-x-4">
+                        {/* Quantity */}
+                        <div className="flex items-center space-x-2">
+                            <button className="btn btn-circle btn-sm">-</button>
+                            <span className="text-lg font-semibold">1</span>
+                            <button className="btn btn-circle btn-sm">+</button>
                         </div>
-
-                    </div>
-                    <div>
-                        <button className="btn text-xl bg-orange-400 text-white border-none mt-5">ADD to Chart</button>
+                        {/* Add to Cart */}
+                        <button className="btn btn-primary px-6">Add to Cart</button>
                     </div>
                 </div>
             </div>
-            <ReviewForm></ReviewForm>
-            {/* Reviews */}
-            <details className="dropdown">
-               <summary className="btn w-screen m-1 flex justify-between"><h2 className="text-xl text-center font-semibold">Reviews</h2><h2><FaAngleDown /></h2></summary>
-                <ul className="menu dropdown-content bg-base-100 rounded-box z-[1] w-screen p-2 shadow">
-                    <div className="mt-6 mx-auto text-center">
-                        <h2 className="text-xl font-semibold mb-4">Reviews</h2>
-                        <div className="lg:grid grid-cols-4 lg:gap-10">
-                        {reviews && reviews.length > 0 ? (
-                            reviews.map((review) => (
-                                <div
-                                    key={review.review_id}
-                                    className="border-b pb-4 mb-4"
-                                >
-                                    <p className="font-medium">{review.user}</p>
-                                    <p className="text-sm text-gray-600">
-                                        {review.comment}
-                                    </p>
-                                    <p className="text-sm text-yellow-500">
-                                        {review.rating} / 5
-                                    </p>
-                                    <p className="text-xs text-gray-400">
-                                        {review.date}
-                                    </p>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-gray-600">No reviews yet.</p>
-                        )}
-                        </div>
-                    </div>
-                </ul>
-            </details>
+            <div>
+                <Reviews></Reviews>
+            </div>
         </div>
     );
 };
 
 export default ProductDetails;
-
-const product = {
-    "id": 1,
-    "name": "Men's Casual Shirt",
-    "price": 29.99,
-    "discount": {
-        "type": "percentage",
-        "value": 15
-    },
-    "description": "A stylish casual shirt perfect for everyday wear, made from high-quality cotton fabric.",
-    "category": "men",
-    "sizes": ["S", "M", "L", "XL"],
-    "colors": ["blue", "white", "black"],
-    "images": [
-        "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400",
-    ],
-    "stock": 50,
-    "rating": 4.5,
-    "reviews": [
-        {
-            "review_id": 1,
-            "user": "John Doe",
-            "rating": 5,
-            "comment": "Great fit and comfortable material!",
-            "date": "2025-01-10"
-        },
-        {
-            "review_id": 1,
-            "user": "John Doe",
-            "rating": 5,
-            "comment": "Great fit and comfortable material!",
-            "date": "2025-01-10"
-        },
-        {
-            "review_id": 1,
-            "user": "John Doe",
-            "rating": 5,
-            "comment": "Great fit and comfortable material!",
-            "date": "2025-01-10"
-        },
-        {
-            "review_id": 2,
-            "user": "Jane Smith",
-            "rating": 4,
-            "comment": "Good quality but the size runs a bit small.",
-            "date": "2025-01-12"
-        }
-    ],
-    "brand": "FashionHub",
-    "productType": "Clothing",
-    "tags": ["casual", "shirt", "men's wear"],
-    "availableLocations": ["Online", "Store #12"],
-    "warranty": "30-day return policy",
-    "material": "100% Cotton"
-};
