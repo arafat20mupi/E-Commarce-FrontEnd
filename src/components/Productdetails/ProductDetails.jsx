@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Reviews from "./Reviews";
+import YouMayLike from "./YouMayLike";
 
 const ProductDetails = () => {
     const [selectedImage, setSelectedImage] = useState(0);
@@ -33,7 +34,7 @@ const ProductDetails = () => {
                             <img
                                 src={products.product_images[selectedImage]} // Display selected image
                                 alt={products.product_name}
-                                className="w-80 object-cover m-2 h-[420px] rounded-lg border shadow-sm"
+                                className="w-80 object-cover m-2 h-[440px] rounded-lg border shadow-sm"
                             />
                         </div>
                         <div>
@@ -147,6 +148,7 @@ const ProductDetails = () => {
             </div>
             <div>
                 <Reviews></Reviews>
+                <YouMayLike></YouMayLike>
             </div>
         </div>
     );
