@@ -5,10 +5,11 @@ export const App = () => {
   return (
     <>
       <Navbar />
-      <div className="mt-16 min-h-[calc(100vh-4rem)]">
+      <div className="min-h-[calc(100vh-4rem)]">
         <Outlet />
       </div>
       <Footer />
     </>
   );
 };
+  
