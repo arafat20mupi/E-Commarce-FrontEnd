@@ -53,18 +53,16 @@ const Hero = () => {
       </section>
 
       <section>
-        <div className="bg-black text-white p-8 ">
-          <Marquee>
-            <ul className="flex gap-12 text-2xl font-extrabold text-white">
-              <li>StyleSphere</li>
-              <li>Urban Vogue</li>
-              <li>ChicVibe</li>
-              <li>Modish Haven</li>
-              <li>TrendThreads</li>
-              <li>TrendThreads</li>
-            </ul>
-          </Marquee>
-        </div>
+        <Marquee  className="bg-black text-white p-8 ">
+          <ul className="flex gap-12 text-2xl font-extrabold text-white">
+            <li>StyleSphere</li>
+            <li>Urban Vogue</li>
+            <li>ChicVibe</li>
+            <li>Modish Haven</li>
+            <li>TrendThreads</li>
+            <li>TrendThreads</li>
+          </ul>
+        </Marquee>
       </section>
 
       <section>
