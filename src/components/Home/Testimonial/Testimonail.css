@@ -1,0 +1,13 @@
+
+.testimonial-slide {
+  margin: 0 10px; /* Horizontal gap between slides */
+}
+
+.slick-slide {
+  padding: 10px; /* Optional: add padding around slides */
+}
+
+/* Optional: To style the slider container for debugging */
+.slider-container {
+  position: relative; /* Ensure relative positioning for button alignment */
+}
