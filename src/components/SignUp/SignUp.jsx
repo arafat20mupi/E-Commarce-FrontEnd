@@ -1,9 +1,12 @@
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useContext } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
+import SocialLogin from "../SocialLogin/SocialLogin";
+import signupImage from "../../../public/logiandsignup/Group 2014.png";
 
-const SimpleSignUp = () => {
+const SignUp = () => {
   const { createUser } = useContext(AuthContext);
   const {
     register,
@@ -16,7 +19,7 @@ const SimpleSignUp = () => {
 
     try {
       await createUser(email, password);
-      alert("Sign up successful!");
+      toast.success("Sign up successful!");
     } catch (error) {
       console.error(error);
       toast.error("Error during sign-up: " + (error.message || "Unknown error"));
@@ -24,10 +27,28 @@ const SimpleSignUp = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
+    <div className="flex bg-gray-200 items-center justify-center min-h-screen">
+      <div className="bg-white w-[900px] h-[600px] p-6 rounded-lg shadow-lg flex">
+        {/* Form */}
+        <div className="w-1/2 p-10 flex flex-col justify-center">
+          <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+
+          {/* Name */}
+          <div className="mb-4">
+            <label className="block text-sm font-bold mb-2" htmlFor="name">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              {...register("name", { required: "Name is required" })}
+              placeholder="Enter your name"
+              className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
+            />
+            {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+          </div>
+
+          {/* Email */}
           <div className="mb-4">
             <label className="block text-sm font-bold mb-2" htmlFor="email">
               Email
@@ -39,11 +60,10 @@ const SimpleSignUp = () => {
               placeholder="Enter your email"
               className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
           </div>
 
+          {/* Password */}
           <div className="mb-4">
             <label className="block text-sm font-bold mb-2" htmlFor="password">
               Password
@@ -61,21 +81,34 @@ const SimpleSignUp = () => {
               placeholder="Enter your password"
               className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
             />
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
-            )}
+            {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600"
-          >
+          {/* Sign Up Button */}
+          <button type="submit" className="w-full bg-orange-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-orange-400">
             Sign Up
           </button>
-        </form>
+
+          {/* Login Link */}
+          <p className="text-slate-500 text-center pt-2">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500 hover:underline">
+              Log in.
+            </Link>
+          </p>
+
+          {/* Social Login */}
+          <p className="text-slate-500 text-center py-2">or sign up with</p>
+          <SocialLogin />
+        </div>
+
+        {/* Image */}
+        <div className=" flex items-center justify-center">
+          <img src={signupImage} className="h-[550px] w-[400px]" alt="Signup" />
+        </div>
       </div>
     </div>
   );
 };
 
-export default SimpleSignUp;
+export default SignUp;
