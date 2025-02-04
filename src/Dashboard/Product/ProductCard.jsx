@@ -6,11 +6,13 @@ const ProductCard = ({ item }) => {
   const { image, title, description, price } = item;
   return (
     <div className="bg-white p-5 rounded-xl hover:shadow-lg transform transition duration-300">
-      <div className="flex justify-between gap-2">
+      <div className="flex justify-between">
+        <div className="flex gap-3">
         <img className="w-24 h-24 rounded-md" src={image} alt={title} />
-        <div>
-          <p className="font-semibold">{title}</p>
-          <p className="text-lg font-bold">$ {price}</p>
+          <div>
+            <p className="font-semibold">{title}</p>
+            <p className="text-lg font-bold">$ {price}</p>
+          </div>
         </div>
         <span className="p-2 h-8 rounded-full hover:bg-base-200 transition duration-200">
           <BsThreeDotsVertical />
