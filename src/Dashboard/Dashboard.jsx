@@ -1,64 +1,67 @@
-import { useState } from "react";
-import { FaHome, FaUser, FaCog, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaReplyAll,
+  FaSignOutAlt,
+  FaUser,
+  FaUsers,
+} from "react-icons/fa";
+import { IoDocumentTextOutline } from "react-icons/io5";
+import { MdProductionQuantityLimits, MdCallToAction } from "react-icons/md";
+
 import { Link, Outlet } from "react-router-dom";
+
 const Dashboard = () => {
-
-
   return (
-    <div className="flex h-screen">
+    <div className="flex">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-500 text-white flex flex-col">
-        <div className="p-4 flex justify-between text-center text-2xl font-bold border-b border-gray-700">
+      <div className="w-64 bg-gray-800 text-white flex flex-col">
+        <div className="p-4 flex justify-between items-center text-2xl font-bold border-b border-gray-700">
           <Link
-            to='/'
-
-
+            to="/"
+            data-tip="Back to home"
+            className="pt-2 hover:text-green-400 tooltip tooltip-right transition-all duration-200 transform hover:-translate-x-2 active:scale-95"
           >
-            <FaHome />
+            <FaReplyAll />
           </Link>
           Dashboard
-
         </div>
         <nav className="flex-1 p-4 space-y-2">
-
           <Link
-            to='/dashboard/profile'
+            to="/dashboard/profile"
             className={`flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 transition`}
-
           >
             <FaUser /> Profile
           </Link>
           <Link
-            to='/dashboard/allProducts'
+            to="/dashboard/allProducts"
             className={`flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 transition `}
-
           >
+            <MdCallToAction />
             All Product
           </Link>
           <Link
-            to='/dashboard/addProduct'
+            to="/dashboard/addProduct"
             className={`flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 transition `}
-
           >
+            <MdProductionQuantityLimits />
             Add Product
           </Link>
           <Link
-            to='/dashboard/order'
+            to="/dashboard/order"
             className={`flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 transition `}
-
           >
+            <IoDocumentTextOutline />
             All Orders
           </Link>
           <Link
-            to='/dashboard/AllUsers'
+            to="/dashboard/AllUsers"
             className={`flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 transition `}
-
           >
+            <FaUsers />
             All Users
           </Link>
         </nav>
         <div className="p-4 border-t border-gray-700">
-          <button className="flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 transition">
+          <button className="flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 hover:text-red-500  transition duration-200">
             <FaSignOutAlt /> Logout
           </button>
         </div>
