@@ -17,7 +17,8 @@ const Dashboard = () => {
         <div className="p-4 flex justify-between items-center text-2xl font-bold border-b border-gray-700">
           <Link
             to="/"
-            className="pt-2 hover:text-green-400 transition-all duration-200 transform hover:scale-110 active:scale-95"
+            data-tip="Back to home"
+            className="pt-2 hover:text-green-400 tooltip tooltip-right transition-all duration-200 transform hover:-translate-x-2 active:scale-95"
           >
             <FaReplyAll />
           </Link>
@@ -60,7 +61,7 @@ const Dashboard = () => {
           </Link>
         </nav>
         <div className="p-4 border-t border-gray-700">
-          <button className="flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 transition">
+          <button className="flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 hover:text-red-500  transition duration-200">
             <FaSignOutAlt /> Logout
           </button>
         </div>
