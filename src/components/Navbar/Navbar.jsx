@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-
+const isAdmin = true
   return (
     <nav className="bg-white shadow px-6 py-4 fixed top-0 left-0 right-0 z-40">
       <div className="flex items-center justify-between">
@@ -21,6 +21,10 @@ const Navbar = () => {
           <li>
             {" "}
             <Link to="/products" className="cursor-pointer hover:underline">Products</Link>
+          </li>
+          <li>
+            {" "}
+            <Link to="/dashboard/profile" className="cursor-pointer hover:underline">Dashboard</Link>
           </li>
           <li>
             {" "}
