@@ -10,6 +10,7 @@ import {
 
 import { FiSliders } from "react-icons/fi";
 import { RxCross1 } from "react-icons/rx";
+import { Link } from "react-router-dom";
 
 const Product = () => {
   const [rating, setRating] = useState(0);
@@ -472,7 +473,8 @@ const Product = () => {
           {/* Product Container */}
           <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1">
             {products.map((item, index) => (
-              <div
+              <Link
+              to='/details'
                 key={index}
                 className="rounded-lg p-4 flex flex-col items-center hover:shadow-lg transition-transform duration-300 ease-in-out transform hover:scale-105"
               >
@@ -509,7 +511,7 @@ const Product = () => {
                     </span>
                   )}
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
