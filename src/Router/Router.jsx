@@ -12,6 +12,7 @@ import AddProduct from "../Dashboard/Product/AddProduct";
 import AllProduct from "../Dashboard/Product/AllProduct";
 import Profile from "../Dashboard/Profile/Profile";
 import User from "../Dashboard/User/User";
+import PrivateRouter from "./PrivateRouter";
 
 export const router = createBrowserRouter([
   {
@@ -37,37 +38,37 @@ export const router = createBrowserRouter([
       },
       {
         path: "/addToCart",
-        element:<AddToCart></AddToCart>
+        element: <AddToCart></AddToCart>
       },
       {
         path: "/signup",
-        element:<SignUp></SignUp>
+        element: <SignUp></SignUp>
       },
     ],
   },
   {
-    path:"/dashboard",
-    element:<Dashboard/>,
+    path: "/dashboard",
+    element: <PrivateRouter><Dashboard /></PrivateRouter>,
     children: [
       {
         path: 'profile',
-        element: <Profile />
-      },
+        element: <PrivateRouter><Profile /></PrivateRouter>
+      }, 
       {
         path: 'addProduct',
-        element: <AddProduct />
+        element: <PrivateRouter><AddProduct /> </PrivateRouter>
       },
       {
         path: 'allProducts',
-        element: <AllProduct />
+        element: <PrivateRouter><AllProduct /></PrivateRouter>
       },
       {
         path: 'order',
-        element: <AllOrders />
+        element: <PrivateRouter><AllOrders /></PrivateRouter>
       },
       {
         path: 'AllUsers',
-        element: <User />
+        element: <PrivateRouter><User /></PrivateRouter>
       }
     ]
   }

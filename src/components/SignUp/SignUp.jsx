@@ -1,10 +1,11 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { useContext } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import SocialLogin from "../SocialLogin/SocialLogin";
 import signupImage from "../../../public/logiandsignup/Group 2014.png";
+import { imageUpload } from "../../Utility/imageUpload";
 
 const SignUp = () => {
   const { createUser, updateProfileData } = useContext(AuthContext);
@@ -13,35 +14,34 @@ const SignUp = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
-    const { name, email, password } = data;
-    const currentDate = new Date().toISOString();
-    console.log("Form Submitted on:", currentDate);
-    console.log("Form Data:", data);
+    const { name, email, password, img } = data;
+
+    const image = await imageUpload(img[0]);
+    console.log(image);
 
     try {
       const userCredential = await createUser(email, password);
       const user = userCredential.user;
 
-      // Update user profile with name
-      await updateProfileData(name);
-
-      toast.success("Sign up successful!");
+      if (user) {
+        await updateProfileData(name, image);
+        toast.success("Sign up successful!");
+        navigate("/");
+      }
     } catch (error) {
       console.error(error);
       toast.error("Error during sign-up: " + (error.message || "Unknown error"));
     }
   };
 
-
-
   return (
-    <div className="flex bg-gray-200 items-center justify-center min-h-screen">
-      <Toaster />
-      <div className="bg-white w-[900px] h-[600px] p-6 rounded-lg shadow-lg flex">
+    <div className="flex bg-gray-200 items-center justify-center min-h-screen p-4">
+      <div className="bg-white w-full max-w-4xl p-6 rounded-lg shadow-lg flex flex-col md:flex-row">
         {/* Form */}
-        <div className="w-1/2 p-10 flex flex-col justify-center">
+        <div className="w-full md:w-1/2 p-6 flex flex-col justify-center">
           <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
           <form onSubmit={handleSubmit(onSubmit)}>
             {/* Name */}
@@ -95,6 +95,20 @@ const SignUp = () => {
               {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
             </div>
 
+            {/* Image */}
+            <div className="mb-4">
+              <label className="block text-sm font-bold mb-2" htmlFor="img">
+                Profile Picture
+              </label>
+              <input
+                type="file"
+                id="img"
+                {...register("img", { required: "Image is required" })}
+                className="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none focus:border-blue-500"
+              />
+              {errors.img && <p className="text-red-500 text-sm">{errors.img.message}</p>}
+            </div>
+
             {/* Sign Up Button */}
             <button
               type="submit"
@@ -118,8 +132,8 @@ const SignUp = () => {
         </div>
 
         {/* Image */}
-        <div className="flex items-center justify-center">
-          <img src={signupImage} className="h-[550px] w-[400px]" alt="Signup" />
+        <div className="w-full md:w-1/2 flex items-center justify-center">
+          <img src={signupImage} className="h-[550px] w-full object-cover" alt="Signup" />
         </div>
       </div>
     </div>
