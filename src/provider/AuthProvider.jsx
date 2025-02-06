@@ -17,10 +17,10 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const updateProfileData = async (name) => {
+    const updateProfileData = async (name, image) => {
         try {
             setLoading(true);
-            await updateProfile(auth.currentUser, { displayName: name } ,{ photoURL : img});
+            await updateProfile(auth.currentUser, { displayName: name, photoURL: image });
         } catch (error) {
             console.error("Error updating profile:", error);
         } finally {
@@ -50,12 +50,10 @@ const AuthProvider = ({ children }) => {
         return signInWithPopup(auth, provider);
     };
 
-
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             setLoading(false);
-            
         });
 
         return () => unSubscribe();
@@ -68,7 +66,7 @@ const AuthProvider = ({ children }) => {
         logOut,
         signIn,
         signGoogle,
-        updateProfileData, 
+        updateProfileData,
     };
 
     return (

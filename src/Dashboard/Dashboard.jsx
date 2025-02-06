@@ -9,16 +9,26 @@ import { MdProductionQuantityLimits, MdCallToAction } from "react-icons/md";
 
 import { Link, Outlet } from "react-router-dom";
 import useAdmin from "../Hook/useadmin";
+import { useContext } from "react";
+import { AuthContext } from "../provider/AuthProvider";
+import toast from "react-hot-toast";
 
 
 const Dashboard = () => {
+  const { logOut } = useContext(AuthContext)
   const { role, loading } = useAdmin();
-
-  if (loading) {
-    return <p>Loading...</p>; // Prevents destructuring errors
+  if (!role) {
+    return <div className="justify-center text-center flex items-center mt-40 w-full">
+      <span className="loading loading-spinner loading-lg"></span>
+    </div>
   }
 
-  console.log("User Role:", role);
+  if (loading) {
+    return <div className="justify-center text-center flex items-center mt-40 w-full">
+      <span className="loading loading-spinner loading-lg"></span>
+    </div>
+  }
+
 
   return (
     <div className="flex">
@@ -73,12 +83,26 @@ const Dashboard = () => {
               </Link>
             </>
           }
-        </nav>
-        <div className="p-4 border-t border-gray-700">
-          <button className="flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 hover:text-red-500  transition duration-200">
+          {
+            role === 'user' &&
+            <>
+              <Link
+                to="/dashboard/myOrder"
+                className={`flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 transition `}
+              >
+                <MdCallToAction />
+                My Order
+              </Link>
+            </>
+          }
+          <button onClick={() => {
+            logOut()
+            toast.success('Successfully logged out')
+          }} className="flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 hover:text-red-500  transition duration-200">
             <FaSignOutAlt /> Logout
           </button>
-        </div>
+        </nav>
+
       </div>
 
       {/* Content Area */}

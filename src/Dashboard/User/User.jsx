@@ -2,58 +2,30 @@ import React, { useEffect, useState } from "react";
 import useAxiosPublic from "../../Hook/useAxiosPublic";
 import Swal from 'sweetalert2';
 
-// const users = [
-//   {
-//     name: "John Doe",
-//     email: "john.doe@example.com",
-//     role: "Admin",
-//     status: "Active",
-//   },
-//   {
-//     name: "Jane Smith",
-//     email: "jane.smith@example.com",
-//     role: "User",
-//     status: "Inactive",
-//   },
-//   {
-//     name: "Robert Johnson",
-//     email: "robert.johnson@example.com",
-//     role: "Editor",
-//     status: "Active",
-//   },
-//   {
-//     name: "Emily Davis",
-//     email: "emily.davis@example.com",
-//     role: "Admin",
-//     status: "Active",
-//   },
-//   // Add more users as needed
-// ];
-
-
 const User = () => {
   // State for managing filter values
   const [roleFilter, setRoleFilter] = useState("All");
-  const [statusFilter, setStatusFilter] = useState("All");
-  const [users, setUsers] = useState([])
-  const axiosPublic = useAxiosPublic()
+  const [searchTerm, setSearchTerm] = useState("");
+  const [users, setUsers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [usersPerPage] = useState(10);
+  const axiosPublic = useAxiosPublic();
 
   const filteredUsers = users.filter((user) => {
     const roleMatch = roleFilter === "All" || user.role === roleFilter;
-    const statusMatch = statusFilter === "All" || user.status === statusFilter;
-    return roleMatch && statusMatch;
+    const nameMatch = user.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return roleMatch && nameMatch;
   });
+
   useEffect(() => {
     axiosPublic.get('/api/users')
       .then(response => {
-        console.log(response.data.users
-        )
-        setUsers(response.data.users)
+        setUsers(response.data.users);
       })
       .catch(error => {
         console.error(error);
       });
-  }, [])
+  }, []);
 
   const handleUserDelete = (uid) => {
     Swal.fire({
@@ -73,6 +45,7 @@ const User = () => {
               text: "The user has been deleted.",
               icon: "success"
             });
+            setUsers(users.filter(user => user.uid !== uid));
           })
           .catch(error => {
             Swal.fire({
@@ -84,8 +57,8 @@ const User = () => {
           });
       }
     });
-    console.log(uid);
   };
+
   const handleUpdateRole = (uid, newrole) => {
     Swal.fire({
       title: "Are you sure?",
@@ -104,6 +77,7 @@ const User = () => {
               text: `User role has been updated to ${newrole}.`,
               icon: "success"
             });
+            setUsers(users.map(user => user.uid === uid ? { ...user, role: newrole } : user));
           })
           .catch(error => {
             Swal.fire({
@@ -115,8 +89,13 @@ const User = () => {
       }
     });
   };
-  
 
+  // Pagination logic
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div className="min-h-screen flex flex-col p-8">
@@ -127,12 +106,11 @@ const User = () => {
         <div className="flex items-center">
           <input
             type="text"
-            placeholder="Search users"
-            className="px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search Users"
+            className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700">
-            Search
-          </button>
         </div>
 
         <div className="flex space-x-4">
@@ -143,20 +121,9 @@ const User = () => {
             className="px-4 py-2 border rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="All">All Roles</option>
-            <option value="Admin">Admin</option>
-            <option value="User">User</option>
-            <option value="Editor">Editor</option>
-          </select>
-
-          {/* Filter by Status */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="All">All Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+            <option value="editor">Editor</option>
           </select>
         </div>
       </div>
@@ -176,7 +143,7 @@ const User = () => {
                 Role
               </th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">
-                Status
+                Last Active
               </th>
               <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">
                 Actions
@@ -184,7 +151,7 @@ const User = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user, index) => (
+            {currentUsers.map((user, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
                 <td className="px-6 py-4 text-sm text-gray-900">{user.name}</td>
                 <td className="px-6 py-4 text-sm text-gray-600">
@@ -221,13 +188,21 @@ const User = () => {
 
       {/* Pagination Section */}
       <div className="mt-6 flex justify-between items-center">
-        <button className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">
+        <button
+          onClick={() => paginate(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="btn btn-primary"
+        >
           Previous
         </button>
-        <div className="text-sm text-gray-600">
-          <span>Page 1 of 10</span>
+        <div className="text-sm ">
+          <span>Page {currentPage} of {Math.ceil(filteredUsers.length / usersPerPage)}</span>
         </div>
-        <button className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200">
+        <button
+          onClick={() => paginate(currentPage + 1)}
+          disabled={currentPage === Math.ceil(filteredUsers.length / usersPerPage)}
+          className="btn btn-primary"
+        >
           Next
         </button>
       </div>
