@@ -1,43 +1,122 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import useAxiosPublic from "../../Hook/useAxiosPublic";
+import Swal from 'sweetalert2';
 
-const users = [
-  {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    role: "Admin",
-    status: "Active",
-  },
-  {
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-    role: "User",
-    status: "Inactive",
-  },
-  {
-    name: "Robert Johnson",
-    email: "robert.johnson@example.com",
-    role: "Editor",
-    status: "Active",
-  },
-  {
-    name: "Emily Davis",
-    email: "emily.davis@example.com",
-    role: "Admin",
-    status: "Active",
-  },
-  // Add more users as needed
-];
+// const users = [
+//   {
+//     name: "John Doe",
+//     email: "john.doe@example.com",
+//     role: "Admin",
+//     status: "Active",
+//   },
+//   {
+//     name: "Jane Smith",
+//     email: "jane.smith@example.com",
+//     role: "User",
+//     status: "Inactive",
+//   },
+//   {
+//     name: "Robert Johnson",
+//     email: "robert.johnson@example.com",
+//     role: "Editor",
+//     status: "Active",
+//   },
+//   {
+//     name: "Emily Davis",
+//     email: "emily.davis@example.com",
+//     role: "Admin",
+//     status: "Active",
+//   },
+//   // Add more users as needed
+// ];
+
 
 const User = () => {
   // State for managing filter values
   const [roleFilter, setRoleFilter] = useState("All");
   const [statusFilter, setStatusFilter] = useState("All");
+  const [users, setUsers] = useState([])
+  const axiosPublic = useAxiosPublic()
 
   const filteredUsers = users.filter((user) => {
     const roleMatch = roleFilter === "All" || user.role === roleFilter;
     const statusMatch = statusFilter === "All" || user.status === statusFilter;
     return roleMatch && statusMatch;
   });
+  useEffect(() => {
+    axiosPublic.get('/api/users')
+      .then(response => {
+        console.log(response.data.users
+        )
+        setUsers(response.data.users)
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, [])
+
+  const handleUserDelete = (uid) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPublic.delete(`/api/delete/user/${uid}`)
+          .then(res => {
+            Swal.fire({
+              title: "Deleted!",
+              text: "The user has been deleted.",
+              icon: "success"
+            });
+          })
+          .catch(error => {
+            Swal.fire({
+              title: "Error!",
+              text: "There was a problem deleting the user.",
+              icon: "error"
+            });
+            console.error("Delete error:", error);
+          });
+      }
+    });
+    console.log(uid);
+  };
+  const handleUpdateRole = (uid, newrole) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: `You are about to change the user's role to ${newrole}.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: `Yes, Make ${newrole.charAt(0).toUpperCase() + newrole.slice(1)}`
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosPublic.patch(`/api/update-role`, { uid, role: newrole })
+          .then(res => {
+            Swal.fire({
+              title: "Success!",
+              text: `User role has been updated to ${newrole}.`,
+              icon: "success"
+            });
+          })
+          .catch(error => {
+            Swal.fire({
+              title: "Error!",
+              text: "There was a problem updating the role.",
+              icon: "error"
+            });
+          });
+      }
+    });
+  };
+  
+
 
   return (
     <div className="min-h-screen flex flex-col p-8">
@@ -114,20 +193,23 @@ const User = () => {
                 <td className="px-6 py-4 text-sm text-gray-600">{user.role}</td>
                 <td className="px-6 py-4 text-sm">
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                      user.status === "Active"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
-                    }`}
+                    className={`px-3 py-1 rounded-full text-sm font-semibold ${user.lastActive === "Active"
+                      ? "bg-green-100 text-green-600"
+                      : "bg-red-100 text-red-600"
+                      }`}
                   >
-                    {user.status}
+                    {user.lastActive}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-600">
-                  <button className="text-blue-600 hover:text-blue-800 mr-4">
-                    Edit
+                  <button
+                    onClick={() => handleUpdateRole(user.uid, 'admin')}
+                    className={`${user.role === 'admin' ? 'text-transparent' : 'text-blue-600 hover:text-blue-800'} mr-4`}
+                    disabled={user.role === 'admin'}
+                  >
+                    Make Admin
                   </button>
-                  <button className="text-red-600 hover:text-red-800">
+                  <button onClick={() => handleUserDelete(user.uid)} className="text-red-600 hover:text-red-800">
                     Delete
                   </button>
                 </td>

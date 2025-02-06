@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { FaCartShopping, FaUserInjured } from "react-icons/fa6";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
 import { Link } from "react-router-dom";
 
+
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-const isAdmin = true
+  
   return (
     <nav className="bg-white shadow px-6 py-4 fixed top-0 left-0 right-0 z-40">
       <div className="flex items-center justify-between">
