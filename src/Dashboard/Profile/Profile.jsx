@@ -3,7 +3,7 @@ import { AuthContext } from "../../provider/AuthProvider";
 import toast from "react-hot-toast";
 
 const Profile = () => {
-  const { user , logOut } = useContext(AuthContext) 
+  const { user, logOut } = useContext(AuthContext)
 
   if (!user) {
     return (
@@ -17,9 +17,10 @@ const Profile = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
       <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm text-center">
-       
+
         <div className="relative w-32 h-32 mx-auto mb-4">
           <img
+            referrerPolicy="no-referrer"
             src={user.photoURL || "https://via.placeholder.com/100"}
             alt="Profile"
             className="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover"

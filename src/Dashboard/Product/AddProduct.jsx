@@ -17,7 +17,6 @@ const AddProduct = () => {
       images: [""],
       category: "",
       faqs: [{ question: "", answer: "" }],
-     
       remainingProducts: 0,
       productDetails: "",
     },
@@ -87,7 +86,6 @@ const AddProduct = () => {
               placeholder="Enter product name"
             />
           </div>
-          
           <div>
             <label className="block text-gray-700">Original Price</label>
             <input
@@ -98,7 +96,7 @@ const AddProduct = () => {
             />
           </div>
           <div>
-            <label className="block text-gray-700">Discount</label>
+            <label className="block text-gray-700  ">Discount</label>
             <input
               {...register("discount")}
               className="input input-bordered w-full"
@@ -134,7 +132,7 @@ const AddProduct = () => {
               placeholder="Enter colors"
             />
           </div>
-         
+
           <div>
             <label className="block text-gray-700">Sizes</label>
             <input
@@ -142,17 +140,25 @@ const AddProduct = () => {
               className="input input-bordered w-full"
               placeholder="Enter sizes"
             />
-           
+
           </div>
           <div>
             <label className="block text-gray-700">Remaining Products</label>
             <input
-            type="number"
+              type="number"
               className="input input-bordered w-full"
               {...register('remainingProducts')}
               placeholder="Enter remaining products"
             />
-            
+          </div>
+          <div >
+            <label className="block text-gray-700">Product Images</label>
+            <input
+              type="file"
+              className="file-input file-input-secondary"
+              multiple
+              {...register('image')}
+            />
           </div>
         </div>
 
@@ -188,32 +194,27 @@ const AddProduct = () => {
                   placeholder="Enter answer"
                 />
               </div>
-              <button type="button" onClick={() => remove(index)} className="btn btn-danger">
+              <button type="button" onClick={() => remove(index)} className="btn btn-warning">
                 <FaTrash /> Remove FAQ
               </button>
             </div>
           ))}
-          <button type="button" onClick={() => append({ question: "", answer: "" })} className="btn btn-primary">
+          <button type="button" onClick={() => append({ question: "", answer: "" })} className="btn btn-accent">
             <FaPlus /> Add FAQ
           </button>
         </div>
 
-        <div className="mt-4">
-          <label className="block text-gray-700">Product Images</label>
-          <input
-            type="file"
-            className="file-input file-input-primary"
-            multiple
-            {...register('image')}
-          />
-        </div>
 
-        <button
-          type="submit"
-          className="mt-6 btn btn-primary flex items-center gap-2"
-        >
-          <FaPlus /> Add Product
-        </button>
+
+        <div className="mt-6   justify-center w-full flex items-center gap-2">
+
+          <button
+            type="submit"
+            className="btn btn-primary"
+          >
+            <FaPlus /> Add Product
+          </button>
+        </div>
       </form>
     </div>
   );
