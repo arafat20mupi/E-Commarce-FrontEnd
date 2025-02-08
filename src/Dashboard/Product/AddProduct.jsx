@@ -1,25 +1,77 @@
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { FaPlus, FaTrash } from "react-icons/fa";
-
+import useAxiosPublic from "../../Hook/useAxiosPublic";
+const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+import toast from 'react-hot-toast'
 const AddProduct = () => {
-  const { register, handleSubmit, setValue, watch } = useForm({
+  const axios = useAxiosPublic();
+  const { register, handleSubmit, control } = useForm({
     defaultValues: {
       name: "",
-      rating: "",
-      price: "",
       originalPrice: "",
       discount: "",
       description: "",
       colors: "",
       sizes: "",
-      images: ["", "", ""],
+      images: [""],
+      category: "",
+      faqs: [{ question: "", answer: "" }],
+     
+      remainingProducts: 0,
+      productDetails: "",
     },
   });
 
-  const images = watch("images");
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "faqs",
+  });
 
-  const onSubmit = (data) => {
-    console.log("Product Data:", data);
+  const uploadImageToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", uploadPreset);
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await response.json();
+    return data.secure_url;
+  };
+
+  const onSubmit = async (data) => {
+    try {
+      const imageFiles = data.image;
+      const imageUrls = await Promise.all(
+        Array.from(imageFiles).map((file) => uploadImageToCloudinary(file))
+      );
+
+      const formattedData = {
+        name: data.name,
+        originalPrice: data.originalPrice,
+        discount: data.discount,
+        description: data.description,
+        colors: data.colors,
+        sizes: data.sizes,
+        images: imageUrls,
+        category: data.category,
+        faqs: data.faqs,
+        remainingProducts: data.remainingProducts,
+        productDetails: data.productDetails,
+      };
+
+      const response = await axios.post("/api/products", formattedData);
+      console.log("Product added successfully:", response.data);
+      toast.success('Product added successfully');
+    } catch (error) {
+      console.error("Error adding product:", error);
+    }
   };
 
   return (
@@ -32,27 +84,17 @@ const AddProduct = () => {
             <input
               {...register("name")}
               className="input input-bordered w-full"
+              placeholder="Enter product name"
             />
           </div>
-          <div>
-            <label className="block text-gray-700">Rating</label>
-            <input
-              {...register("rating")}
-              className="input input-bordered w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700">Price</label>
-            <input
-              {...register("price")}
-              className="input input-bordered w-full"
-            />
-          </div>
+          
           <div>
             <label className="block text-gray-700">Original Price</label>
             <input
+              type="number"
               {...register("originalPrice")}
               className="input input-bordered w-full"
+              placeholder="Enter original price"
             />
           </div>
           <div>
@@ -60,6 +102,15 @@ const AddProduct = () => {
             <input
               {...register("discount")}
               className="input input-bordered w-full"
+              placeholder="Enter discount"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700">Category</label>
+            <input
+              {...register("category")}
+              className="input input-bordered w-full"
+              placeholder="Enter category"
             />
           </div>
         </div>
@@ -70,63 +121,91 @@ const AddProduct = () => {
             {...register("description")}
             className="textarea textarea-bordered w-full"
             rows="3"
+            placeholder="Enter product description"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4 mt-4">
           <div>
             <label className="block text-gray-700">Colors</label>
-            <select
+            <input
               {...register("colors")}
-              className="select select-bordered w-full"
-            >
-              <option value="Red">Red</option>
-              <option value="Blue">Blue</option>
-              <option value="Green">Green</option>
-              <option value="Black">Black</option>
-              <option value="White">White</option>
-              <option value="Yellow">Yellow</option>
-            </select>
+              className="input input-bordered w-full"
+              placeholder="Enter colors"
+            />
           </div>
+         
           <div>
             <label className="block text-gray-700">Sizes</label>
-            <select
+            <input
               {...register("sizes")}
-              className="select select-bordered w-full"
-            >
-              <option value="Small">Small</option>
-              <option value="Medium">Medium</option>
-              <option value="Large">Large</option>
-              <option value="X-Large">X-Large</option>
-            </select>
+              className="input input-bordered w-full"
+              placeholder="Enter sizes"
+            />
+           
+          </div>
+          <div>
+            <label className="block text-gray-700">Remaining Products</label>
+            <input
+            type="number"
+              className="input input-bordered w-full"
+              {...register('remainingProducts')}
+              placeholder="Enter remaining products"
+            />
+            
           </div>
         </div>
 
         <div className="mt-4">
-          <label className="block text-gray-700">Product Images</label>
-          <div className="grid grid-cols-3 gap-2">
-            {images.map((img, index) => (
-              <div key={index} className="relative">
+          <label className="block text-gray-700">Product Details</label>
+          <textarea
+            {...register("productDetails")}
+            className="textarea textarea-bordered w-full"
+            rows="3"
+            placeholder="Enter product details"
+          />
+        </div>
+
+        {/* Add Faq */}
+        <div className="mt-4">
+          <h3 className="text-lg font-bold mb-4">FAQ</h3>
+          {fields.map((item, index) => (
+            <div key={item.id} className="grid grid-cols-1 gap-4 mb-4">
+              <div>
+                <label className="block text-gray-700">Question</label>
                 <input
-                  type="text"
+                  {...register(`faqs.${index}.question`)}
                   className="input input-bordered w-full"
-                  placeholder={`Image URL ${index + 1}`}
-                  {...register(`images.${index}`)}
+                  placeholder="Enter question"
                 />
-                <button
-                  type="button"
-                  className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full"
-                  onClick={() => {
-                    const newImages = [...images];
-                    newImages[index] = "";
-                    setValue("images", newImages);
-                  }}
-                >
-                  <FaTrash size={12} />
-                </button>
               </div>
-            ))}
-          </div>
+              <div>
+                <label className="block text-gray-700">Answer</label>
+                <textarea
+                  {...register(`faqs.${index}.answer`)}
+                  className="textarea textarea-bordered w-full"
+                  rows="3"
+                  placeholder="Enter answer"
+                />
+              </div>
+              <button type="button" onClick={() => remove(index)} className="btn btn-danger">
+                <FaTrash /> Remove FAQ
+              </button>
+            </div>
+          ))}
+          <button type="button" onClick={() => append({ question: "", answer: "" })} className="btn btn-primary">
+            <FaPlus /> Add FAQ
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <label className="block text-gray-700">Product Images</label>
+          <input
+            type="file"
+            className="file-input file-input-primary"
+            multiple
+            {...register('image')}
+          />
         </div>
 
         <button
