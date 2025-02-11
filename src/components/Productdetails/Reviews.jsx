@@ -54,7 +54,7 @@ const Reviews = ({products}) => {
 
         <TabPanel>
           <div>
-            <ReviewCard  product_name={products.productName} reviews={reviews}></ReviewCard>
+            <ReviewCard  products={products} reviews={reviews}></ReviewCard>
           </div>
         </TabPanel>
         <TabPanel>
