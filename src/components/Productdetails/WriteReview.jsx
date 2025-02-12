@@ -11,14 +11,15 @@ const WriteReview = (products) => {
     const { user } = useContext(AuthContext);
     const handleReviewSubmit = async (e) => {
         e.preventDefault();
-        const stars = e.target["rating-2"].value; // Access the selected rating
-        const text = e.target.text.value; // Access the review text
+        const stars = e.target["rating-2"].value;
+        const text = e.target.text.value; 
         const writeReviewData = {
-            name: user.displayName, // Replace with actual user name
+            name: user.displayName, 
             stars,
             email:user.email,
             text,
             date: new Date().toISOString(),
+            image: user.photoURL
         };
         console.log(writeReviewData);
         try {
