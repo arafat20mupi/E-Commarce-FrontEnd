@@ -3,7 +3,7 @@ import { AiOutlineMenuUnfold } from "react-icons/ai";
 import { FaAngleDown } from "react-icons/fa";
 import WriteReview from "./WriteReview";
 
-const ReviewCard = ({ reviews }) => {
+const ReviewCard = ({products, reviews }) => {
 
     const [visibleReviews, setVisibleReviews] = useState(9)
     const handleLoadMore = () => {
@@ -27,7 +27,7 @@ const ReviewCard = ({ reviews }) => {
                         </div>
                     </div>
                     <div>
-                        <WriteReview></WriteReview>
+                        <WriteReview products={products}></WriteReview>
                     </div>
                 </div>
             </div>
