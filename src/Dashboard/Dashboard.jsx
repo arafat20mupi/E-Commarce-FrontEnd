@@ -1,4 +1,5 @@
 import {
+  FaChartArea,
   FaReplyAll,
   FaSignOutAlt,
   FaUser,
@@ -50,6 +51,12 @@ const Dashboard = () => {
             className={`flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 transition`}
           >
             <FaUser /> Profile
+          </Link>
+          <Link
+            to="/dashboard/mychart"
+            className={`flex items-center gap-4 p-3 w-full text-left rounded-md hover:bg-gray-700 transition`}
+          >
+            <FaChartArea /> My Chart
           </Link>
           {role === 'admin' &&
             <>

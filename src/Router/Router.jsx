@@ -13,6 +13,7 @@ import AllProduct from "../Dashboard/Product/AllProduct";
 import Profile from "../Dashboard/Profile/Profile";
 import User from "../Dashboard/User/User";
 import PrivateRouter from "./PrivateRouter";
+import Mychart from "../Dashboard/Chart/Mychart";
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ export const router = createBrowserRouter([
       {
         path: 'profile',
         element: <PrivateRouter><Profile /></PrivateRouter>
+      }, 
+      {
+        path: 'mychart',
+        element: <PrivateRouter><Mychart/></PrivateRouter>
       }, 
       {
         path: 'addProduct',
