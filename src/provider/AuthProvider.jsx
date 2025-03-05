@@ -8,7 +8,6 @@ import {
     signOut,
     GoogleAuthProvider,
     updateProfile,
-    GithubAuthProvider,
 } from "firebase/auth";
 import auth from "../Firebase/firebase.config";
 
@@ -18,10 +17,10 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const updateProfileData = async (name, img) => {
+    const updateProfileData = async (name, image) => {
         try {
             setLoading(true);
-            await updateProfile(auth.currentUser, { displayName: name } ,{ photoURL : img});
+            await updateProfile(auth.currentUser, { displayName: name, photoURL: image });
         } catch (error) {
             console.error("Error updating profile:", error);
         } finally {
@@ -51,18 +50,10 @@ const AuthProvider = ({ children }) => {
         return signInWithPopup(auth, provider);
     };
 
-    const gitProvider = new GithubAuthProvider();
-
-    const signGithub = () => {
-        setLoading(true);
-        return signInWithPopup(auth, gitProvider);
-    };
-
     useEffect(() => {
         const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
             setLoading(false);
-            
         });
 
         return () => unSubscribe();
@@ -75,8 +66,7 @@ const AuthProvider = ({ children }) => {
         logOut,
         signIn,
         signGoogle,
-        updateProfileData, 
-        signGithub,
+        updateProfileData,
     };
 
     return (

@@ -6,7 +6,7 @@ import Faqs from './Faqs';
 
 
 const Reviews = ({products}) => {
-  const {product_details,reviews,faqs }=products
+  const {productDetails,reviews,faqs }=products
   const [activeTab, setActiveTab] = useState(0);
 
 
@@ -43,7 +43,7 @@ const Reviews = ({products}) => {
         <TabPanel>
           <div className="p-4">
             <ul className="list-disc list-inside space-y-2">
-              {product_details.map((detail, index) => (
+              {productDetails.map((detail, index) => (
                 <li key={index} className="text-gray-700">
                   {detail}
                 </li>
@@ -54,7 +54,7 @@ const Reviews = ({products}) => {
 
         <TabPanel>
           <div>
-            <ReviewCard  product_name={products.product_name} reviews={reviews}></ReviewCard>
+            <ReviewCard  products={products} reviews={reviews}></ReviewCard>
           </div>
         </TabPanel>
         <TabPanel>

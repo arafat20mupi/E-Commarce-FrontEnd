@@ -1,29 +1,53 @@
-import React, { useState } from "react";
-
-const WriteReview = () => {
+import React, { useContext, useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import useAxiosPublic from "../../Hook/useAxiosPublic";
+import { AuthContext } from "../../provider/AuthProvider";
+const WriteReview = (products) => {
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleReviewSubmit = (e) => {
+    const axios = useAxiosPublic();
+    const { user } = useContext(AuthContext);
+    const handleReviewSubmit = async (e) => {
         e.preventDefault();
-        const stars = e.target["rating-2"].value; // Access the selected rating
-        const text = e.target.text.value; // Access the review text
+        const stars = e.target["rating-2"].value;
+        const text = e.target.text.value; 
         const writeReviewData = {
-            name: "get data from auth", // Replace with actual user name
+            name: user.displayName, 
             stars,
+            email:user.email,
             text,
+            date: new Date().toISOString(),
+            image: user.photoURL
         };
         console.log(writeReviewData);
+        try {
+            const id=products.products._id
+            await axios.post(`api/products/${id}/reviews`, writeReviewData);
+            toast.success("Review added successfully!");
+        } catch (error) {
+            toast.error("Failed to add review");
+        }
 
         // Close the modal after submission
         setIsModalOpen(false);
+    };
+    const handleOpenModal = () => {
+        if (user) {
+            setIsModalOpen(true);
+        } else {
+            toast.error("Please log in to give a review.");
+        }
     };
 
     return (
         <div>
             {/* Button to open the modal */}
+            <ToastContainer />
             <button
                 className="btn mt-1 bg-orange-400 hover:bg-orange-600 text-white"
-                onClick={() => setIsModalOpen(true)}
+                onClick={handleOpenModal}
             >
                 Write a Review
             </button>
